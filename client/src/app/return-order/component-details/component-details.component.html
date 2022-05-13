@@ -1,0 +1,148 @@
+<form #processingForm="ngForm" (ngSubmit)="submitProcessingForm()" *ngIf="!processingChargeDetails || editMode">
+  <div class="col-12">
+    <fieldset>
+      <legend class="mt-4">Contact Details</legend>
+      <hr>
+      <div class="form-group">
+        <label for="name" class="form-label mt-4">Name</label>
+        <input [(ngModel)]="componentDetails.name" type="text" class="form-control" id="name" name="name"
+          placeholder="Your Name" required #name="ngModel" [ngClass]="{'is-invalid' : !name.valid && name.touched}">
+        <div *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">Name is required.</div>
+      </div>
+      <div class="form-group">
+        <label for="contactNumber" class="form-label mt-4">Contact Number</label>
+        <input [(ngModel)]="componentDetails.contactNumber" type="cred" id="phone" name="contactNumber"
+          placeholder="Phone Number" required class="form-control" id="contactNumber" required
+          #phNumber="ngModel" [ngClass]="{'is-invalid' : !phNumber.valid && phNumber.touched}">
+        <div *ngIf="!phNumber.valid && phNumber.touched" class="invalid-feedback d-block">Please enter a valid contact
+          number.
+        </div>
+      </div>
+      <fieldset class="form-group">
+        <legend class="mt-4">Defective Component Details</legend>
+        <hr>
+        <div class="form-group">
+          <label for="componentName" class="form-label mt-4">Component Name</label>
+          <input [(ngModel)]="componentDetails.defectiveComponentName" type="text" name="defectiveComponentName"
+            class="form-control" id="componentName" placeholder="Component Name" required
+            #defectiveComponentName="ngModel"
+            [ngClass]="{'is-invalid' : !defectiveComponentName.valid && defectiveComponentName.touched}">
+          <div *ngIf="!defectiveComponentName.valid && defectiveComponentName.touched" class="invalid-feedback d-block">
+            Defective component's name is required.
+          </div>
+        </div>
+
+        <label for="componentType" class="form-label mt-4">Component Type</label>
+
+        <div class="form-check">
+          <label class="form-check-label">
+            <input [(ngModel)]="componentDetails.defectiveComponentType" type="radio" class="form-check-input"
+              name="defectiveComponentType" id="optionsRadios1" value="Integral" required>
+            Integral
+          </label>
+        </div>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input [(ngModel)]="componentDetails.defectiveComponentType" type="radio" class="form-check-input"
+              name="defectiveComponentType" id="optionsRadios2" value="Accessory" required>
+            Accessory
+          </label>
+        </div>
+      </fieldset>
+      <div class="form-group">
+        <label for="quantity" class="form-label mt-4">Quantity</label>
+        <input [(ngModel)]="componentDetails.quantity" type="number" name="quantity" class="form-control" id="quantity"
+          placeholder="Quantity" required #quantity="ngModel"
+          [ngClass]="{'is-invalid' : !quantity.valid && quantity.touched}">
+        <div *ngIf="!quantity.valid && quantity.touched" class="invalid-feedback d-block">Quantity is required.
+        </div>
+      </div>
+      <button [disabled]="!(processingForm.valid && processingForm.dirty)" type="submit"
+        class="btn btn-success mt-2">Submit</button>
+      <button class="btn btn-warning mr-2 ml-3 mt-2" *ngIf="processingChargeDetails" (click)="cancelEditMode()"
+        type="button">Cancel</button>
+      <button class="btn btn-danger mr-2 ml-3 mt-2" type="button" (click)="cancelOrder()">Cancel Order</button>
+
+
+    </fieldset>
+  </div>
+
+</form>
+
+<ng-container *ngIf="processingChargeDetails && detailMode">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Request Id</th>
+        <th scope="col">Component Name</th>
+        <th scope="col">Component Type</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Processing Charge</th>
+        <th scope="col">Packaging And Delivery Charge</th>
+        <th scope="col">Date Of Delivery</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="table-success">
+        <th scope="row">{{componentDetails.id}}</th>
+        <td>{{componentDetails.defectiveComponentName}}</td>
+        <td>{{componentDetails.defectiveComponentType}}</td>
+        <td>{{componentDetails.quantity}}</td>
+        <td>{{processingChargeDetails.processingCharge}}</td>
+        <td>{{processingChargeDetails.packagingAndDeliveryCharge}}</td>
+        <td>{{processingChargeDetails.dateOfDelivery | date}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="card border-primary mb-3">
+    <div class="card-header">Contact Details</div>
+    <div class="card-body">
+      <h4 class="card-title">Name</h4>
+      <h5 class="card-text">{{componentDetails.name}}</h5>
+      <hr>
+      <h4 class="card-title">Contact Number</h4>
+      <h5 class="card-text">{{componentDetails.contactNumber}}</h5>
+    </div>
+  </div>
+
+  <form #completeProcessingForm="ngForm" (ngSubmit)="confirmOrder()">
+    <div class="col-12">
+      <fieldset>
+        <legend class="mt-4">Payment Information</legend>
+        <hr>
+        <div class="form-group">
+          <label for="creditCardNumber" class="form-label mt-4">Credit Card Number</label>
+          <input [(ngModel)]="componentDetails.creditCardNumber" type="cred" name="creditCardNumber"
+            class="form-control" id="creditCardNumber" placeholder="Credit Card Number" required
+            #creditCardNumber="ngModel"
+            [ngClass]="{'is-invalid' : !creditCardNumber.valid && creditCardNumber.touched}">
+          <div *ngIf="!creditCardNumber.valid && creditCardNumber.touched" class="invalid-feedback d-block">Credit Card
+            Number is required.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="credLimit" class="form-label mt-4">Credit Limit</label>
+          <input [(ngModel)]="componentDetails.creditLimit" type="number" name="creditLimit" class="form-control"
+            id="creditLimit" placeholder="Credit Limit" required #creditLimit="ngModel"
+            [ngClass]="{'is-invalid' : !creditLimit.valid && creditLimit.touched}">
+          <div *ngIf="!creditLimit.valid && creditLimit.touched" class="invalid-feedback d-block">Credit Limit is
+            required.
+          </div>
+        </div>
+        <div class="form-group">
+          <fieldset disabled>
+            <label for="processingCharge" class="form-label mt-4">Processing Charge
+            </label>
+            <input type="number" class="form-control" id="processingCharge"
+              placeholder="{{processingChargeDetails.processingCharge}}" disabled>
+          </fieldset>
+        </div>
+      </fieldset>
+    </div>
+    <div class="form-group text-center">
+      <button class="btn btn-success mr-2" type="submit">Submit Order</button>
+      <button class="btn btn-warning mr-2" (click)="toggleEditMode()" type="button">Edit Details</button>
+      <button class="btn btn-danger mr-2" type="button" (click)="cancelOrder()">Cancel Order</button>
+    </div>
+  </form>
+</ng-container>

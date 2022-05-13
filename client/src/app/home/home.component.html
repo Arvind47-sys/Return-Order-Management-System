@@ -1,0 +1,79 @@
+<div *ngIf="(loggedInUserInfo$ | async) === null" class="container">
+  <div *ngIf="!registerMode" class="container mt-5">
+    <div style="text-align: center;">
+      <h1>Return Order Portal</h1>
+      <p class="lead">This portal allows you to enter details of a defective component for which you will be
+        getting a replacement or
+        repair based on the component type. At the end of payment confimation you will also receive the details
+        of the component and its
+        delivery date.
+      </p>
+      <h3>NOTE</h3>
+      <h5>To Learn more about the component processing pricing information click the Learn More button.</h5>
+      <h5>If you're a new user click on the Register button to register a new account, hence Login using your
+        credentials</h5>
+      <br>
+      <div class="text-center">
+        <button (click)="registerToggle()" class="btn btn-primary btn-lg mr-2">Register</button>
+        <button class="btn btn-dark btn-lg">Learn more</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="registerMode" class="container">
+    <div class="row justify-content-center">
+      <div class="col-4">
+        <app-register (cancelRegister)="cancelRegisterMode($event)"></app-register>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="loggedInUserInfo$ | async">
+  <div class="row">
+    <div class="col-6">
+      <h2 class="text-info"> Return Order Requests</h2>
+    </div>
+    <div class="col-6 text-right">
+      <button class="btn btn-primary btn-lg mr-2" (click)="createNewRequest()">Create New Request</button>
+
+    </div>
+  </div>
+  <ng-container *ngIf="(loggedInUserReturnRequests$ | async) as requests">
+
+    <ng-container *ngIf="requests.length; else noDataFound">
+      <table class="table table-hover mt-4">
+        <thead>
+          <tr>
+            <th scope="col">Request Id</th>
+            <th scope="col">Component Name</th>
+            <th scope="col">Component Type</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Processing Charge</th>
+            <th scope="col">Packaging And Delivery Charge</th>
+            <th scope="col">Date Of Delivery</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of requests" class="table-primary">
+            <th scope="row">{{data.requestId}}</th>
+            <td>{{data.defectiveComponentName}}</td>
+            <td>{{data.defectiveComponentType}}</td>
+            <td>{{data.quantity}}</td>
+            <td>{{data.processingCharge}}</td>
+            <td>{{data.packagingAndDeliveryCharge}}</td>
+            <td>{{data.dateOfDelivery | date}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+
+    <ng-template #noDataFound>
+      <div class="alert alert-dismissible alert-primary mt-20">
+        <strong>No return requests were found...</strong>
+      </div>
+    </ng-template>
+
+  </ng-container>
+
+
+</ng-container>
