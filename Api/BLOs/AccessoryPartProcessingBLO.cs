@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Api.BLOs
 {
+
     public class AccessoryPartProcessingBLO : IComponentProcessing, IAccessoryPartProcessingBLO
     {
           private readonly IMapper _mapper;
