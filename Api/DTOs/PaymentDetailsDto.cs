@@ -14,7 +14,7 @@ namespace Api.DTOs
         public double CreditLimit { get; set; }
 
         [Required]
-        public double ProcessingCharge { get; set; }
+        public double TotalProcessingCharge { get; set; }
 
         [Required]
         public ProcessResponseDto ProcessResponse { get; set; }

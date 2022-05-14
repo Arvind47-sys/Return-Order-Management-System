@@ -4,7 +4,6 @@ using Api.DTOs;
 using Api.Entities;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

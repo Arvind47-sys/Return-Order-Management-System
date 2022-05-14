@@ -1,11 +1,8 @@
-using api.Repository;
 using api.Repository.IRepository;
-using Api.Data;
 using Api.DTOs;
 using Api.Entities;
 using Api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;

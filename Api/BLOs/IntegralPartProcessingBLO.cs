@@ -1,12 +1,9 @@
 using api.Repository.IRepository;
-using Api.Data;
 using Api.DTOs;
 using Api.Entities;
 using Api.Interfaces;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Api.BLOs

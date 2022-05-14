@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (user) {
         this.accountService.getAllUserRequests().subscribe((requests) => {
           if (requests.length)
-            this.toastr.success('Requests Loaded Successfully!');
+            this.toastr.info('Requests Loaded Successfully!');
         });
       }
     }))

@@ -1,8 +1,9 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { DefectiveComponentType } from 'src/app/constants/return-order-constants';
 import { ComponentDetails } from 'src/app/models/component-details.model';
 import { PaymentInfo } from 'src/app/models/payment.model';
@@ -10,6 +11,8 @@ import { ProcessingChargeDetails } from 'src/app/models/processing-charge.model'
 import { User } from 'src/app/models/user.model';
 import { AccountService } from 'src/app/services/account.service';
 import { ComponentProcessingService } from 'src/app/services/component-processing.service';
+
+type NewType = BsModalRef;
 
 @Component({
   selector: 'app-component-details',
@@ -32,26 +35,23 @@ export class ComponentDetailsComponent implements OnInit, OnDestroy {
       $event.returnValue = true;
     }
   }
+  modalRef?: NewType;
 
   constructor(private componentProcessingService: ComponentProcessingService,
     private accountService: AccountService, private router: Router,
-    private toastr: ToastrService) {
-      this.subscription.add(this.accountService.currentUser$.subscribe(user => {
-        this.loggedInUser = user;
-      }))
+    private toastr: ToastrService,
+    private modalService: BsModalService
+  ) {  
   }
 
   processCompletionState$ = this.componentProcessingService.proceesStatusState$;
 
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.componentProcessingService.setProcessState();
     this.editMode = true;
-    this.subscription.add(this.accountService.currentUser$.subscribe(user => {
-      if(user)
-      {
-        this.loggedInUser = user;
-      }
+    this.subscription.add(this.accountService.currentUser$.subscribe(user => {      
+        this.loggedInUser = user;      
     }))
   }
 
@@ -68,7 +68,6 @@ export class ComponentDetailsComponent implements OnInit, OnDestroy {
           this.detailMode = true;
           this.editMode = false;
         }
-
       }
     )
   }
@@ -85,18 +84,20 @@ export class ComponentDetailsComponent implements OnInit, OnDestroy {
 
   cancelOrder() {
     this.componentProcessingService.resetProcessState();
-      if (confirm('Are you sure you want to cancel!')) {
-        this.router.navigateByUrl('/');
-      }
-      else {
-        this.componentProcessingService.setProcessState();
-      }
+    if (confirm('Are you sure you want to cancel!')) {
+      this.router.navigateByUrl('/');
     }
+    else {
+      this.componentProcessingService.setProcessState();
+    }
+  }
 
-  confirmOrder() {
+  confirmOrder(template: TemplateRef<any>) {
     this.componentProcessingService.completeProcessing(this.paymentDetails).subscribe((data => {
       if (data) {
         this.componentProcessingService.resetProcessState();
+        this.toastr.success('Processed successfully');
+        this.modalRef = this.modalService.show(template);
         this.router.navigateByUrl('/');
       }
       else

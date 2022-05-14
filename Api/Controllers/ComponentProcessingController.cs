@@ -1,10 +1,10 @@
-using System.Threading.Tasks;
 using Api.Constants;
 using Api.DTOs;
 using Api.Interfaces;
 using API.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
@@ -28,7 +28,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("processDetail")]
-        public async Task<ActionResult<ProcessResponseDto>> ProcessDetail(ProcessRequestDto processRequest)
+        public async Task<ActionResult<ProcessResponseDto>> ProcessDetail([FromBody] ProcessRequestDto processRequest)
         {
             var username = User.GetUserName();
             var result = new ProcessResponseDto();
@@ -48,8 +48,12 @@ namespace Api.Controllers
         }
 
         [HttpPost("completeProcessing")]
-        public async Task<ActionResult<bool>> CompleteProcessing(PaymentDetailsDto paymentDetails)
+        public async Task<ActionResult<bool>> CompleteProcessing([FromBody] PaymentDetailsDto paymentDetails)
         {
+            if(paymentDetails.CreditLimit < paymentDetails.TotalProcessingCharge)
+            {
+                return BadRequest("Credit limit is less than the total processing charge");
+            }
             var username = User.GetUserName();
             var result = await _completeProcessingBLO.SaveReturnRequest(paymentDetails, username);
             return Ok(result);

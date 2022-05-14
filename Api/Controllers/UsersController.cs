@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
@@ -33,7 +32,7 @@ namespace Api.Controllers
 
             var userId =
              _context.Users.Where(u => u.UserName == username).Select(u => u.Id).FirstOrDefault();
-     
+
 
             var processRequestsFromDb =
            _context.ProcessRequest.Where(req => req.AppUserId == userId).ToList();
